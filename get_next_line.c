@@ -6,11 +6,28 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 23:30:44 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/10/31 14:24:16 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/10/31 20:22:38 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+int	index_for(t_list *line, char c)
+{
+	int	i;
+
+	i = 0;
+	while (line)
+	{
+		i++;
+		if (line->content == c)
+			return (i);
+		line = line->next;
+	}
+	if (c == '\0')
+		return (i);
+	return (-1);
+}
 
 int	ft_lstadd_back(t_list **lst, char c)
 {
@@ -34,12 +51,16 @@ int	ft_lstadd_back(t_list **lst, char c)
 	return (0);
 }
 
-char	*build_line(t_list **line, size_t line_size)
+char	*build_line(t_list **line)
 {
-	size_t	i;
+	int		i;
+	int		line_size;
 	t_list	*aux;
 	char	*line_to_return;
 
+	line_size = index_for(*line, '\n');
+	if (line_size == -1)
+		line_size = index_for(*line, '\0');
 	line_to_return = (char *) malloc(line_size + 1);
 	if (!line_to_return)
 		return (NULL);
@@ -48,8 +69,8 @@ char	*build_line(t_list **line, size_t line_size)
 	i = 0;
 	while (i < line_size)
 	{
-		line_to_return[i] = (*line)->content;
 		aux = *line;
+		line_to_return[i] = (*line)->content;
 		*line = (*line)->next;
 		free(aux);
 		i++;
@@ -60,43 +81,84 @@ char	*build_line(t_list **line, size_t line_size)
 
 int	put_in_list(t_list **line, char *line_part)
 {
-	size_t	i;
-	size_t	line_size;
-	int		node;
+	int	i;
+	int	node;
+	int	has_new_line_or_end;
 
 	i = 0;
-	line_size = 0;
-	node = 0;
-	while (i < BUFFER_SIZE && !node)
+	has_new_line_or_end = 0;
+	while (line_part[i] != '\0')
 	{
 		node = ft_lstadd_back(line, line_part[i]);
+		if (node == -1)	// Tratar quando acontecer isso
+			return (-1);
 		if (line_part[i] == '\n')
-			line_size = i + 1;
+			has_new_line_or_end = 1;
 		i++;
 	}
 	if (node == -1)	// Tratar quando acontecer isso
 		return (-1);
-	return (line_size);
+	if (line_part[i] == '\0')
+		has_new_line_or_end = 1;
+	return (has_new_line_or_end);
+}
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	size_t	i;
+	char	*mem;
+
+	i = 0;
+	if (!s)
+		return (s);
+	mem = (char *) s;
+	while (i < n)
+	{
+		mem[i] = c;
+		i++;
+	}
+	return (s);
 }
 
 char	*get_next_line(int fd)
 {
-	size_t			i;
-	size_t			line_size;
+	int				i;
+	int				line_size;
+	int				read_return;
 	char			*line_part;
 	char			*line_to_return;
 	static t_list	*line;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	i = 0;
-	line_size = 0;
-	line_part = (char *) malloc(BUFFER_SIZE + 1);
-	line_part[BUFFER_SIZE] = '\0';
-	read(fd, line_part, BUFFER_SIZE);
-
-	line_size = put_in_list(&line, line_part);
-	line_to_return = build_line(&line, line_size);
+	line_size = index_for(line, '\n');
+	read_return = 1;
+	line_to_return = NULL;
+	line_part = NULL;
+	if (line_size == -1)
+		line_size = 0;
+	while (line_size == 0 && read_return > 0)
+	{
+		line_part = (char *) calloc(BUFFER_SIZE + 1, sizeof(char));
+		if (!line_part)
+			return (NULL);
+		ft_memset(line_part, '\0', BUFFER_SIZE + 1);
+		read_return = read(fd, line_part, BUFFER_SIZE);
+		if (read_return <= 0)
+			break ;
+		line_size = put_in_list(&line, line_part);
+		if (line_size == -1)	// Tratar quando acontecer isso
+			return (NULL);
+		free(line_part);
+		line_part = NULL;
+		i++;
+	}
+	if (line_part)
+		free(line_part);
+	if (read_return > 0 && line_size != -1)
+		line_to_return = build_line(&line);
 	if (!line_to_return)	// Tratar quando acontecer isso
 		return (NULL);
-
 	return (line_to_return);
 }
