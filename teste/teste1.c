@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   teste1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/26 23:31:21 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/10/31 15:32:53 by danbarbo         ###   ########.fr       */
+/*   Created: 2023/10/31 14:27:30 by danbarbo          #+#    #+#             */
+/*   Updated: 2023/10/31 14:58:57 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-
-# include <unistd.h>
+#include <stdio.h>
+#include <unistd.h>
 #include <fcntl.h>
-# include <stdlib.h>
+#include "get_next_line.h"
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
-# endif
+int main() {
+	int fd;
+	int	lido;
+	char line[BUFFER_SIZE + 1];
+	line[BUFFER_SIZE] = '\0';
 
-typedef struct s_list
-{
-	char			content;
-	struct s_list	*next;
-}	t_list;
+	fd = open("file1.txt", O_RDONLY);
 
-char	*get_next_line(int fd);
-void	*ft_lstadd_back(t_list **lst, char c);
+	lido = read(fd, line, BUFFER_SIZE);
+	printf("Line read: %d %s\n", lido, line);
 
-#endif
+	close(fd);
+	return 0;
+}
