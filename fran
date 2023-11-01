@@ -1,0 +1,21 @@
+[37mfiles/41_no_nl: [31m1.KO [31m2.KO [0m
+[37mfiles/41_with_nl: [31m1.KO [31m2.KO [31m3.KO [0m
+[37mfiles/42_no_nl: [31m1.KO [31m2.KO [0m
+[37mfiles/42_with_nl: [31m1.KO [32m2.OK [31m3.KO [0m
+[37mfiles/43_no_nl: [31m1.KO [31m2.KO [0m
+[37mfiles/43_with_nl: [31m1.KO [31m2.KO [31m3.KO [0m
+[37mfiles/multiple_line_no_nl: [31m1.KO [31m2.KO [31m3.KO [31m4.KO [31m5.KO [31m6.KO [0m
+[37mfiles/multiple_line_with_nl: [31m1.KO [31m2.KO [31m3.KO [31m4.KO [31m5.KO [31m6.KO [0m
+[37mfiles/alternate_line_nl_no_nl: [31m1.KO [31m2.KO [31m3.KO [31m4.KO [31m5.KO [31m6.KO [31m7.KO [31m8.KO [31m9.KO [31m10.KO [0m
+[37mfiles/alternate_line_nl_with_nl: [31m1.KO [31m2.KO [31m3.KO [31m4.KO [31m5.KO [31m6.KO [31m7.KO [31m8.KO [31m9.KO [31m10.KO [0m
+[37mfiles/big_line_no_nl: [31m1.KO [31m2.KO [0m
+[37mfiles/big_line_with_nl: [31m1.KO [31m2.KO [0m
+[37mstdin: [31m1.KO [31m2.KO [31m3.KO [31m4.KO [31m5.KO [31m6.KO [31m7.KO [31m8.KO [31m9.KO [31m10.KO [0m
+[37mfiles/43_no_nl: [31m1.KO [31m2.KO [0m
+[37mfiles/43_with_nl: [31m1.KO [31m2.KO [32m3.OK [0m
+[37mfiles/multiple_line_no_nl: [32m1.OK [31m2.KO [31m3.KO [31m4.KO [31m5.KO [31m6.KO [0m
+[37mfiles/big_line_no_nl: [31m1.KO [31m2.KO [0m
+[37mfiles/big_line_with_nl: [31m1.KO [31m2.KO [0m
+[0;34mone_line_no_nl.txt  [0m: [0;31m1.KO [0m[0;31m2.KO [0m[0;31m3_LEAKS.KO [0m
+[0;34mone_line_no_nl.txt  [0m: [0;31m1.KO [0m[0;31m2.KO [0m[0;31m3_LEAKS.KO [0m
+[0;34mvariable_nls.txt    [0m: [0;32m1.OK [0m[0;32m2.OK [0m[0;32m3.OK [0m[0;32m4.OK [0m[0;32m5.OK [0m[0;32m6.OK [0m[0;32m7.OK [0m[0;32m8.OK [0m[0;32m9.OK [0m[0;32m10.OK [0m[0;32m11.OK [0m[0;31m12.KO [0m[0;32m13.OK [0m[0;31m14_LEAKS.KO [0m

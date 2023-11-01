@@ -1,35 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   teste3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/26 23:31:21 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/01 20:37:15 by danbarbo         ###   ########.fr       */
+/*   Created: 2023/10/31 13:21:11 by danbarbo          #+#    #+#             */
+/*   Updated: 2023/11/01 19:32:30 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "get_next_line.h"
+#include <stdio.h>
 
-# include <unistd.h>
-# include <fcntl.h>
-# include <stdlib.h>
-
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 15
-# endif
-
-typedef struct s_list
+int	main()
 {
-	char			content;
-	struct s_list	*next;
-}	t_list;
+	char	*line;
 
-int	ft_strlen(const char *s);
+	while ((line = get_next_line(0)))
+	{
+		printf("%s", line);
+		free(line);
+	}
 
-char	*get_next_line(int fd);
-int		ft_lstadd_back(t_list **lst, char c);
-
-#endif
+	return (0);
+}

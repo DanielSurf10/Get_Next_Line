@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 23:30:44 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/10/31 20:22:38 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/01 19:26:19 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ char	*get_next_line(int fd)
 		line_size = 0;
 	while (line_size == 0 && read_return > 0)
 	{
-		line_part = (char *) calloc(BUFFER_SIZE + 1, sizeof(char));
+		line_part = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
 		if (!line_part)
 			return (NULL);
 		ft_memset(line_part, '\0', BUFFER_SIZE + 1);

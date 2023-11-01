@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 13:21:11 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/10/31 19:37:38 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/01 20:37:19 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main()
 	int	fd;
 	char	*line;
 
-	fd = open("files/41_no_nl", O_RDONLY);
+	fd = open("file1.txt", O_RDONLY);
 
 	while ((line = get_next_line(fd)))
 	{
