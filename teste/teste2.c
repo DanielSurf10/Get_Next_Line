@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 13:21:11 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/02 16:15:24 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/02 18:16:31 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,13 @@ int	main()
 	int	fd;
 	char	*line;
 
-	fd = open("file3.txt", O_RDONLY);
+	fd = open("file2.txt", O_RDONLY);
 
-	// while ((line = get_next_line(fd)))
-	// {
-	// 	printf("%s\n", line);
-	// 	free(line);
-	// }
-
-	line = get_next_line(fd);
-	printf("%s\n", line);
-	free(line);
-	
-	line = get_next_line(fd);
-	printf("%s\n", line);
-	free(line);
+	while ((line = get_next_line(fd)))
+	{
+		printf("%s\n", line);
+		free(line);
+	}
 
 	return (0);
 }
