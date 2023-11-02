@@ -10,6 +10,7 @@
 		"libft.h": "c",
 		"list_utils.h": "c",
 		"my_utils.h": "c",
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"get_next_line.h": "c"
 	}
 }

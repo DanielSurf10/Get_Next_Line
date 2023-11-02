@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 23:30:44 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/02 19:34:46 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/02 20:01:06 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	*ft_memset(void *s, int c, size_t n)
 {
@@ -97,18 +97,75 @@ char	*read_fd(int fd, t_list **line)
 	return (line_to_return);
 }
 
+t_fd	*get_fd(int fd, t_fd **fd_list)
+{
+	t_fd	*aux;
+	t_fd	*new_fd;
+
+	aux = *fd_list;
+	if (aux)
+	{
+		while (aux->next)
+		{
+			if (aux->fd == fd)
+				return (aux);
+			aux = aux->next;
+		}
+	}
+	new_fd = (t_fd *) malloc(sizeof(t_fd));
+	if (!new_fd)
+		return (NULL);
+	new_fd->fd = fd;
+	new_fd->line = NULL;
+	if (!(*fd_list))
+		*fd_list = new_fd;
+	else
+		aux->next = new_fd;
+	return (new_fd);
+}
+
+void	remove_fd(int fd, t_fd **fd_list)
+{
+	t_fd	*aux;
+	t_fd	*prev;
+
+	aux = *fd_list;
+	prev = NULL;
+	while (aux)
+	{
+		if (aux->fd == fd)
+		{
+			if (prev)
+				prev->next = aux->next;
+			else
+				*fd_list = aux->next;
+			free(aux);
+			return ;
+		}
+		prev = aux;
+		aux = aux->next;
+	}
+}
+
 char	*get_next_line(int fd)
 {
 	char			*line_to_return;
-	static t_list	*line;
+	t_fd			*node_fd;
+	// static t_list	*line;
+	static t_fd		*fd_list;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	line_to_return = read_fd(fd, &line);
+	node_fd = get_fd(fd, &fd_list);
+	if (!node_fd)				// Aqui tem que limpar tudo
+		return (NULL);
+	line_to_return = read_fd(fd, &node_fd->line);
 	if (!line_to_return)
 	{
-		ft_lstclear(&line);
+		ft_lstclear(&node_fd->line);
 		return (NULL);
 	}
+	if (!(node_fd->line))
+		remove_fd(fd, &fd_list);
 	return (line_to_return);
 }
