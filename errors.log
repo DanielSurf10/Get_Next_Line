@@ -1,0 +1,7 @@
+[1;31mError[0m in test 1: [0;36mget_next_line(-1: "1char.txt")[0m: expected: "0", got: <NULL>
+[1;31mError[0m in test 1: [0;36mget_next_line(-1: "1char.txt")[0m: expected 2 bytes, allocated 0 bytes
+Could not find the corresponding allocation or the pointer (nil)
+should reserve space for the string: "0"
+[1;31mError[0m in test 3: [0;36mget_next_line(-1: "1char.txt")[0m: 
+Memory leak: 0x39a7a80 - 8192 bytes
+You failed to free the memory allocated at:
