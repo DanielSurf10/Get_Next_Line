@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 23:31:21 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/02 18:49:27 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/03 19:59:19 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ typedef struct s_list
 char	*get_next_line(int fd);
 int		ft_lstadd_back(t_list **lst, char c);
 int		ft_lst_next_line_size(t_list *lst);
-void	*ft_memset(void *s, int c, size_t n);
 void	ft_lstclear(t_list **lst);
 char	*read_fd(int fd, t_list **line);
 int		need_to_read(t_list *line);

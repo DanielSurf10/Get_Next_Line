@@ -6,28 +6,11 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 23:30:44 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/03 19:36:26 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/03 19:56:08 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-
-void	*ft_memset(void *s, int c, size_t n)
-{
-	size_t	i;
-	char	*mem;
-
-	i = 0;
-	if (!s)
-		return (s);
-	mem = (char *) s;
-	while (i < n)
-	{
-		mem[i] = c;
-		i++;
-	}
-	return (s);
-}
 
 int	ft_lstadd_back(t_list **lst, char c)
 {
@@ -83,7 +66,8 @@ char	*read_fd(int fd, t_list **line)
 		line_part = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
 		if (!line_part)
 			return (NULL);
-		ft_memset(line_part, '\0', BUFFER_SIZE + 1);
+		while (read_status < BUFFER_SIZE + 1)
+			line_part[read_status++] = '\0';
 		read_status = read(fd, line_part, BUFFER_SIZE);
 		if (read_status != FAIL)
 			read_status = put_in_list(line, line_part);
@@ -116,36 +100,11 @@ t_fd	*get_fd(int fd, t_fd **fd_list)
 	new_fd->fd = fd;
 	new_fd->content = NULL;
 	new_fd->next = NULL;
-
 	if (!(*fd_list))
 		*fd_list = new_fd;
 	else
 		aux->next = new_fd;
 	return (new_fd);
-}
-
-void	remove_fd(int fd, t_fd **fd_list)
-{
-	t_fd	*aux;
-	t_fd	*prev;
-
-	aux = *fd_list;
-	prev = NULL;
-	while (aux)
-	{
-		if (aux->fd == fd || fd == -1) // -1 para limpar tudo
-		{
-			if (prev)
-				prev->next = aux->next;
-			else
-				*fd_list = aux->next;
-			ft_lstclear(&aux->content);
-			free(aux);
-			return ;
-		}
-		prev = aux;
-		aux = aux->next;
-	}
 }
 
 char	*get_next_line(int fd)
@@ -157,8 +116,11 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	node_fd = get_fd(fd, &fd_list);
-	if (!node_fd)				// Aqui tem que limpar tudo
+	if (!node_fd)
+	{
+		get_fd(-1, &fd_list);
 		return (NULL);
+	}
 	line_to_return = read_fd(fd, &node_fd->content);
 	if (!line_to_return)
 	{

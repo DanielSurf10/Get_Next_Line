@@ -6,28 +6,11 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 23:30:44 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/03 19:36:49 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/03 19:59:10 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-void	*ft_memset(void *s, int c, size_t n)
-{
-	size_t	i;
-	char	*mem;
-
-	i = 0;
-	if (!s)
-		return (s);
-	mem = (char *) s;
-	while (i < n)
-	{
-		mem[i] = c;
-		i++;
-	}
-	return (s);
-}
 
 int	ft_lstadd_back(t_list **lst, char c)
 {
@@ -83,7 +66,8 @@ char	*read_fd(int fd, t_list **line)
 		line_part = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
 		if (!line_part)
 			return (NULL);
-		ft_memset(line_part, '\0', BUFFER_SIZE + 1);
+		while (read_status < BUFFER_SIZE + 1)
+			line_part[read_status++] = '\0';
 		read_status = read(fd, line_part, BUFFER_SIZE);
 		if (read_status != FAIL)
 			read_status = put_in_list(line, line_part);
