@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 13:34:01 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/02 18:52:02 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/03 19:32:21 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	put_in_list(t_list **line, char *line_part)
 		if (status_node_creation == FAIL)
 			return (FAIL);
 		if (line_part[i] == '\n')
-			has_new_line = 1;
+			has_new_line = BUILD_STRING;
 		i++;
 	}
 	if (has_new_line)

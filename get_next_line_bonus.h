@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 23:31:21 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/02 19:43:47 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/03 18:09:34 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef struct s_list
 typedef struct s_fd
 {
 	int			fd;
-	t_list		*line;
+	t_list		*content;
 	struct s_fd	*next;
 }	t_fd;
 

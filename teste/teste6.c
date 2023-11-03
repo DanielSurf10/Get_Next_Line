@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 13:21:11 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/02 20:09:46 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/03 19:10:49 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,13 @@ int	main()
 
 	line1 = get_next_line(fd1);
 	line2 = get_next_line(fd2);
-	printf("line2 = %s\n", line2);
-	free(line2);
-	line2 = get_next_line(fd2);
+	// printf("line2 = %s\n", line2);
+	// line2 = get_next_line(fd2);
 
 	while (line1 || line2)
 	{
-		printf("line1 = %s\n", line1);
-		printf("line2 = %s\n", line2);
+		// printf("line1 = %s\n", line1);
+		// printf("line2 = %s\n", line2);
 		free(line1);
 		free(line2);
 		line1 = get_next_line(fd1);

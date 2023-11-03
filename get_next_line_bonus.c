@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 23:30:44 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/03 15:19:37 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/03 19:36:26 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,18 +105,18 @@ t_fd	*get_fd(int fd, t_fd **fd_list)
 	aux = *fd_list;
 	if (aux)
 	{
-		while (aux->next)
-		{
-			if (aux->fd == fd)
-				return (aux);
+		while (aux->next && aux->fd != fd)
 			aux = aux->next;
-		}
+		if (aux->fd == fd)
+			return (aux);
 	}
 	new_fd = (t_fd *) malloc(sizeof(t_fd));
 	if (!new_fd)
 		return (NULL);
 	new_fd->fd = fd;
-	new_fd->line = NULL;
+	new_fd->content = NULL;
+	new_fd->next = NULL;
+
 	if (!(*fd_list))
 		*fd_list = new_fd;
 	else
@@ -133,13 +133,13 @@ void	remove_fd(int fd, t_fd **fd_list)
 	prev = NULL;
 	while (aux)
 	{
-		if (aux->fd == fd || fd == -1) // Não sei se deixo aqui como -1
+		if (aux->fd == fd || fd == -1) // -1 para limpar tudo
 		{
 			if (prev)
 				prev->next = aux->next;
 			else
 				*fd_list = aux->next;
-			ft_lstclear(&aux->line);
+			ft_lstclear(&aux->content);
 			free(aux);
 			return ;
 		}
@@ -152,7 +152,6 @@ char	*get_next_line(int fd)
 {
 	char			*line_to_return;
 	t_fd			*node_fd;
-	// static t_list	*line;
 	static t_fd		*fd_list;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
@@ -160,13 +159,12 @@ char	*get_next_line(int fd)
 	node_fd = get_fd(fd, &fd_list);
 	if (!node_fd)				// Aqui tem que limpar tudo
 		return (NULL);
-	line_to_return = read_fd(fd, &node_fd->line);
+	line_to_return = read_fd(fd, &node_fd->content);
 	if (!line_to_return)
 	{
-		ft_lstclear(&node_fd->line);
+		ft_lstclear(&node_fd->content);
+		remove_fd(fd, &fd_list);
 		return (NULL);
 	}
-	if (!(node_fd->line))
-		remove_fd(fd, &fd_list);
 	return (line_to_return);
 }
