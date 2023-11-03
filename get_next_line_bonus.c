@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 23:30:44 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/02 20:01:06 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/03 15:19:37 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,12 +133,13 @@ void	remove_fd(int fd, t_fd **fd_list)
 	prev = NULL;
 	while (aux)
 	{
-		if (aux->fd == fd)
+		if (aux->fd == fd || fd == -1) // Não sei se deixo aqui como -1
 		{
 			if (prev)
 				prev->next = aux->next;
 			else
 				*fd_list = aux->next;
+			ft_lstclear(&aux->line);
 			free(aux);
 			return ;
 		}
