@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 13:34:01 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/03 19:32:21 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/15 16:45:10 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,20 @@ int	ft_lst_next_line_size(t_list *lst)
 	return (i);
 }
 
-int	need_to_read(t_list *line)
-{
-	int	i;
-
-	i = 0;
-	while (line)
-	{
-		i++;
-		if (line->content == '\n')
-			return (BUILD_STRING);
-		line = line->next;
-	}
-	return (READ);
-}
+// int	need_to_read(t_list *line)
+// {
+// 	int	i;
+//
+// 	i = 0;
+// 	while (line)
+// 	{
+// 		i++;
+// 		if (line->content == '\n')
+// 			return (BUILD_STRING);
+// 		line = line->next;
+// 	}
+// 	return (READ);
+// }
 
 char	*build_line(t_list **line)
 {
@@ -51,6 +51,7 @@ char	*build_line(t_list **line)
 	char	*line_to_return;
 	t_list	*aux;
 
+	i = 0;
 	if (*line == NULL)
 		return (NULL);
 	line_size = ft_lst_next_line_size(*line);
@@ -58,7 +59,6 @@ char	*build_line(t_list **line)
 	if (!line_to_return)
 		return (NULL);
 	line_to_return[line_size] = '\0';
-	i = 0;
 	while (i < line_size)
 	{
 		aux = *line;
@@ -67,31 +67,30 @@ char	*build_line(t_list **line)
 		free(aux);
 		i++;
 	}
+	aux = NULL;
 	return (line_to_return);
 }
 
-int	put_in_list(t_list **line, char *line_part)
+int	put_in_list(t_list **line, char *line_part, int size_readed)
 {
 	int	i;
 	int	status_node_creation;
-	int	has_new_line;
+	int	return_status;
 
 	i = 0;
-	has_new_line = 0;
+	return_status = READ;
 	if (!line_part)
 		return (FAIL);
-	if (line_part[0] == '\0')
+	if (size_readed == 0)
 		return (BUILD_STRING);
-	while (line_part[i] != '\0')
+	while (i < size_readed)
 	{
 		status_node_creation = ft_lstadd_back(line, line_part[i]);
 		if (status_node_creation == FAIL)
 			return (FAIL);
 		if (line_part[i] == '\n')
-			has_new_line = BUILD_STRING;
+			return_status = BUILD_STRING;
 		i++;
 	}
-	if (has_new_line)
-		return (BUILD_STRING);
-	return (READ);
+	return (return_status);
 }

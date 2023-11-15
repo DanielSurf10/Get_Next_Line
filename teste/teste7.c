@@ -6,14 +6,15 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 13:21:11 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/04 00:28:28 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/06 16:06:12 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
+#include <fcntl.h>
 
-#define MAXFDS 8192
+#define MAXFDS 4096
 
 int	main()
 {
@@ -25,12 +26,12 @@ int	main()
 	while (i < MAXFDS)
 		fd[i++] = open("file2.txt", O_RDONLY);
 
-	// line[0] = get_next_line(fd[0]);
+	i = 0;
+	// line = get_next_line(fd[0]);
 	// line[0] = (char *) 1;
 
-	while (lines < 20)
+	while (lines < 18)
 	{
-		i = 0;
 		while (i < MAXFDS)
 		{
 			line = get_next_line(fd[i]);
@@ -38,6 +39,7 @@ int	main()
 			free(line);
 			i++;
 		}
+		i = 0;
 		lines++;
 	}
 	return (0);

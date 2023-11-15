@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 23:30:44 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/03 19:56:08 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/15 17:33:24 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,16 @@ char	*read_fd(int fd, t_list **line)
 	read_status = READ;
 	line_part = NULL;
 	line_to_return = NULL;
+	if (!line)
+		return (NULL);
 	while (read_status == READ)
 	{
-		line_part = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
+		line_part = (char *) malloc(BUFFER_SIZE * sizeof(char));
 		if (!line_part)
 			return (NULL);
-		while (read_status < BUFFER_SIZE + 1)
-			line_part[read_status++] = '\0';
 		read_status = read(fd, line_part, BUFFER_SIZE);
 		if (read_status != FAIL)
-			read_status = put_in_list(line, line_part);
+			read_status = put_in_list(line, line_part, read_status);
 		free(line_part);
 		line_part = NULL;
 	}
@@ -118,7 +118,9 @@ char	*get_next_line(int fd)
 	node_fd = get_fd(fd, &fd_list);
 	if (!node_fd)
 	{
-		get_fd(-1, &fd_list);
+		remove_fd(-1, &fd_list);
+		fd_list = NULL;
+		line_to_return = NULL;
 		return (NULL);
 	}
 	line_to_return = read_fd(fd, &node_fd->content);
@@ -126,7 +128,6 @@ char	*get_next_line(int fd)
 	{
 		ft_lstclear(&node_fd->content);
 		remove_fd(fd, &fd_list);
-		return (NULL);
 	}
 	return (line_to_return);
 }

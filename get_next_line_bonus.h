@@ -6,7 +6,7 @@
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 23:31:21 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/03 19:57:55 by danbarbo         ###   ########.fr       */
+/*   Updated: 2023/11/15 17:41:44 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 16
+#  define BUFFER_SIZE 5
 # endif
 
 typedef enum e_status
@@ -47,9 +47,9 @@ int		ft_lstadd_back(t_list **lst, char c);
 int		ft_lst_next_line_size(t_list *lst);
 void	ft_lstclear(t_list **lst);
 char	*read_fd(int fd, t_list **line);
-int		need_to_read(t_list *line);
+// int		need_to_read(t_list *line);
 char	*build_line(t_list **line);
-int		put_in_list(t_list **line, char *line_part);
+int		put_in_list(t_list **line, char *line_part, int size_readed);
 void	remove_fd(int fd, t_fd **fd_list);
 t_fd	*get_fd(int fd, t_fd **fd_list);
 
