@@ -3,94 +3,75 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cshingai <cshingai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/31 13:34:01 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/15 16:45:10 by danbarbo         ###   ########.fr       */
+/*   Created: 2023/12/01 19:03:53 by cshingai          #+#    #+#             */
+/*   Updated: 2023/12/09 02:06:28 by cshingai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_lst_next_line_size(t_list *lst)
+char	*ft_strchr(char *str, int c)
 {
-	int		i;
-	t_list	*aux;
+	int	index;
 
-	i = 0;
-	aux = lst;
-	while (aux)
+	index = 0;
+	while (str[index])
 	{
-		i++;
-		if (aux->content == '\n')
-			return (i);
-		aux = aux->next;
+		if (str[index] == (unsigned char) c)
+			return ((char *) &str[index]);
+		index++;
 	}
-	return (i);
+	if ((unsigned char) c == str[index])
+		return ((char *) &str[index]);
+	return (NULL);
 }
 
-// int	need_to_read(t_list *line)
-// {
-// 	int	i;
-//
-// 	i = 0;
-// 	while (line)
-// 	{
-// 		i++;
-// 		if (line->content == '\n')
-// 			return (BUILD_STRING);
-// 		line = line->next;
-// 	}
-// 	return (READ);
-// }
-
-char	*build_line(t_list **line)
+char	*ft_strdup(char *str)
 {
-	int		i;
-	int		line_size;
-	char	*line_to_return;
-	t_list	*aux;
+	int		index;
+	int		size_str;
+	char	*temp;
 
-	i = 0;
-	if (*line == NULL)
-		return (NULL);
-	line_size = ft_lst_next_line_size(*line);
-	line_to_return = (char *) malloc(line_size + 1);
-	if (!line_to_return)
-		return (NULL);
-	line_to_return[line_size] = '\0';
-	while (i < line_size)
+	index = 0;
+	size_str = ft_strlen(str);
+	temp = malloc((size_str + 1) * sizeof(char));
+	while (str[index] != '\0')
 	{
-		aux = *line;
-		line_to_return[i] = (*line)->content;
-		*line = (*line)->next;
-		free(aux);
-		i++;
+		temp[index] = str[index];
+		index++;
 	}
-	aux = NULL;
-	return (line_to_return);
+	temp[index] = '\0';
+	return (temp);
 }
 
-int	put_in_list(t_list **line, char *line_part, int size_readed)
+int	ft_strlen(const char *str)
 {
-	int	i;
-	int	status_node_creation;
-	int	return_status;
+	int	index;
 
-	i = 0;
-	return_status = READ;
-	if (!line_part)
-		return (FAIL);
-	if (size_readed == 0)
-		return (BUILD_STRING);
-	while (i < size_readed)
-	{
-		status_node_creation = ft_lstadd_back(line, line_part[i]);
-		if (status_node_creation == FAIL)
-			return (FAIL);
-		if (line_part[i] == '\n')
-			return_status = BUILD_STRING;
-		i++;
-	}
-	return (return_status);
+	index = 0;
+	while (str[index])
+		index++;
+	return (index);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	int		idx1;
+	int		idx2;
+	int		size_new_line;
+	char	*new_line;
+
+	idx1 = -1;
+	idx2 = -1;
+	size_new_line = ft_strlen(s1) + ft_strlen(s2);
+	new_line = malloc((size_new_line + 1) * sizeof(char));
+	while (s1[++idx1] != '\0')
+		new_line[idx1] = s1[idx1];
+	while (s2[++idx2] != '\0')
+		new_line[idx1 + idx2] = s2[idx2];
+	new_line[idx1 + idx2] = '\0';
+	free((void *) s1);
+	return (new_line);
 }

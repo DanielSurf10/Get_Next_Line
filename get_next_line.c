@@ -3,93 +3,93 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cshingai <cshingai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/26 23:30:44 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/15 16:36:45 by danbarbo         ###   ########.fr       */
+/*   Created: 2023/12/01 17:49:02 by cshingai          #+#    #+#             */
+/*   Updated: 2023/12/09 02:17:49 by cshingai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-int	ft_lstadd_back(t_list **lst, char c)
-{
-	t_list	*new;
-	t_list	*aux;
-
-	new = malloc(sizeof(t_list));
-	if (!new)
-		return (FAIL);
-	new->content = c;
-	new->next = NULL;
-	if (!(*lst))
-		*lst = new;
-	else
-	{
-		aux = *lst;
-		while (aux->next)
-			aux = aux->next;
-		aux->next = new;
-	}
-	return (0);
-}
-
-void	ft_lstclear(t_list **lst)
-{
-	t_list	*aux1;
-	t_list	*aux2;
-
-	if (lst)
-	{
-		aux1 = *lst;
-		while (aux1)
-		{
-			aux2 = aux1->next;
-			free(aux1);
-			aux1 = aux2;
-		}
-		*lst = NULL;
-	}
-}
-
-char	*read_fd(int fd, t_list **line)
-{
-	int		read_status;
-	char	*line_part;
-	char	*line_to_return;
-
-	read_status = READ;
-	line_part = NULL;
-	line_to_return = NULL;
-	if (!line)
-		return (NULL);
-	while (read_status == READ)
-	{
-		line_part = (char *) malloc(BUFFER_SIZE * sizeof(char));
-		if (!line_part)
-			return (NULL);
-		read_status = read(fd, line_part, BUFFER_SIZE);
-		if (read_status != FAIL)
-			read_status = put_in_list(line, line_part, read_status);
-		free(line_part);
-		line_part = NULL;
-	}
-	if (read_status == FAIL)
-		return (NULL);
-	if (read_status == BUILD_STRING)
-		line_to_return = build_line(line);
-	return (line_to_return);
-}
+#include <stdio.h>
 
 char	*get_next_line(int fd)
 {
-	char			*line_to_return;
-	static t_list	*line;
+	char		*line_to_return;
+	char		*full_line;
+	static char	*remainder;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (!remainder)
+		remainder = ft_strdup("");
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	{
+		free(remainder);
+		remainder = NULL;
 		return (NULL);
-	line_to_return = read_fd(fd, &line);
-	if (!line_to_return)
-		ft_lstclear(&line);
+	}
+	full_line = ft_read_line(remainder, fd);
+	line_to_return = ft_build_line(full_line);
+	remainder = get_after_first_newline(full_line);
+	free(full_line);
+	if (*line_to_return == '\0' && *remainder == '\0')
+	{
+		free(line_to_return);
+		free(remainder);
+		remainder = NULL;
+		return (NULL);
+	}
 	return (line_to_return);
+}
+
+char	*ft_read_line(char *line, int fd)
+{
+	char	*temp_buffer;
+	int		chars_readed;
+
+	chars_readed = 1;
+	temp_buffer = (char *) malloc((BUFFER_SIZE + 1) * sizeof(char));
+	while (chars_readed != 0 && ft_strchr(line, '\n') == NULL)
+	{
+		chars_readed = read(fd, temp_buffer, BUFFER_SIZE);
+		temp_buffer[chars_readed] = '\0';
+		line = ft_strjoin(line, temp_buffer);
+	}
+	free(temp_buffer);
+	return (line);
+}
+
+char	*ft_build_line(char *line)
+{
+	int		i;
+	int		size_new_line;
+	char	*new_line;
+
+	i = 0;
+	size_new_line = 0;
+	while (line[size_new_line] != '\0' && line[size_new_line] != '\n')
+		size_new_line++;
+	if (line[size_new_line] == '\n')
+		size_new_line += 1;
+	new_line = (char *) malloc((size_new_line + 1) * sizeof(char));
+	while (i < size_new_line)
+	{
+		new_line[i] = line[i];
+		i++;
+	}
+	new_line[i] = '\0';
+	return (new_line);
+}
+
+char	*get_after_first_newline(char *line)
+{
+	int		i;
+	char	*remainder_after_new_line;
+
+	i = 0;
+	while (line[i] != '\0' && line[i] != '\n')
+		i++;
+	if (line[i] == '\n')
+		i += 1;
+	remainder_after_new_line = ft_strdup(line + i);
+	return (remainder_after_new_line);
 }
