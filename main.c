@@ -1,31 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   teste2.c                                           :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/31 13:21:11 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/15 17:40:44 by danbarbo         ###   ########.fr       */
+/*   Created: 2024/06/27 16:27:33 by danbarbo          #+#    #+#             */
+/*   Updated: 2024/06/27 18:47:45 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <unistd.h>
 
-int	main()
+char	*get_next_line(int fd);
+
+int main()
 {
-	int	fd;
+	int		fd = open("a", O_RDONLY);
 	char	*line;
 
-	fd = open("file1.txt", O_RDONLY);
-
-	while ((line = get_next_line(fd)))
+	while (1)
 	{
-		printf("%s", line);
+		line = get_next_line(fd);
+		if (line)
+			printf("%s", line);
+		else
+			printf("(null)\n");
+		if (!line)
+			break;
 		free(line);
 	}
+
+// 	line = get_next_line(fd);
+// 	if (line)
+// 		printf("%s", line);
+// 	else
+// 		printf("(null)\n");
+//
+// 	close(fd);
+// 	line = get_next_line(fd);
+// 	if (line)
+// 		printf("%s", line);
+// 	else
+// 		printf("(null)\n");
 
 	return (0);
 }

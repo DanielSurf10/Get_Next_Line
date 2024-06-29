@@ -5,91 +5,174 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: danbarbo <danbarbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/26 23:30:44 by danbarbo          #+#    #+#             */
-/*   Updated: 2023/11/15 16:36:45 by danbarbo         ###   ########.fr       */
+/*   Created: 2024/06/27 16:25:18 by danbarbo          #+#    #+#             */
+/*   Updated: 2024/06/27 19:10:20 by danbarbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <stdlib.h>
+#include <unistd.h>
 
-int	ft_lstadd_back(t_list **lst, char c)
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 10
+#endif
+
+char	*ft_strdup(char *str)
 {
-	t_list	*new;
-	t_list	*aux;
+	int		i = 0;
+	int		size = 0;
+	char	*new_str;
 
-	new = malloc(sizeof(t_list));
-	if (!new)
-		return (FAIL);
-	new->content = c;
-	new->next = NULL;
-	if (!(*lst))
-		*lst = new;
-	else
+	while (str && str[size])
+		size++;
+
+	if (!str || size == 0)
+		return (NULL);
+
+	new_str = malloc(size + 1);
+
+	while (str[i])
 	{
-		aux = *lst;
-		while (aux->next)
-			aux = aux->next;
-		aux->next = new;
+		new_str[i] = str[i];
+		i++;
 	}
+
+	new_str[i] = '\0';
+
+	return (new_str);
+}
+
+int	has_new_line(char *str)
+{
+	int	i = 0;
+
+	while (str && str[i])
+	{
+		if (str[i] == '\n')
+			return (1);
+		i++;
+	}
+
 	return (0);
 }
 
-void	ft_lstclear(t_list **lst)
+char	*get_resto(char *line)
 {
-	t_list	*aux1;
-	t_list	*aux2;
+	int		i = 0;
+	char	*new_str = NULL;
 
-	if (lst)
-	{
-		aux1 = *lst;
-		while (aux1)
-		{
-			aux2 = aux1->next;
-			free(aux1);
-			aux1 = aux2;
-		}
-		*lst = NULL;
-	}
-}
-
-char	*read_fd(int fd, t_list **line)
-{
-	int		read_status;
-	char	*line_part;
-	char	*line_to_return;
-
-	read_status = READ;
-	line_part = NULL;
-	line_to_return = NULL;
 	if (!line)
 		return (NULL);
-	while (read_status == READ)
+
+	while (line[i] && line[i] != '\n')
+		i++;
+	if (line[i] == '\n')
+		i++;
+
+	if (line[i])
+		new_str = ft_strdup(line + i);
+
+	return (new_str);
+}
+
+void	ft_strjoin_until_new_line(char **dest, char *src)
+{
+	int		i;
+	int		i_src;
+	int		size = 0;
+	char	*old_str = *dest;
+	char	*new_str;
+
+	i = 0;
+	while (old_str && old_str[i])
+		i++;
+	size += i;
+
+	i = 0;
+	while (src && src[i] && src[i] != '\n')
+		i++;
+	if (src[i] == '\n')
+		i++;
+	size += i;
+
+	if (size == 0)
+		return ;
+
+	new_str = malloc(size + 1);
+
+	i = 0;
+	while (old_str && old_str[i])
 	{
-		line_part = (char *) malloc(BUFFER_SIZE * sizeof(char));
-		if (!line_part)
-			return (NULL);
-		read_status = read(fd, line_part, BUFFER_SIZE);
-		if (read_status != FAIL)
-			read_status = put_in_list(line, line_part, read_status);
-		free(line_part);
-		line_part = NULL;
+		new_str[i] = old_str[i];
+		i++;
 	}
-	if (read_status == FAIL)
-		return (NULL);
-	if (read_status == BUILD_STRING)
-		line_to_return = build_line(line);
-	return (line_to_return);
+
+	i_src = 0;
+	while (src && i < size)
+	{
+		new_str[i] = src[i_src];
+		i++;
+		i_src++;
+	}
+
+	new_str[size] = '\0';
+
+	if (*dest)
+		free(*dest);
+	*dest = new_str;
+
 }
 
 char	*get_next_line(int fd)
 {
-	char			*line_to_return;
-	static t_list	*line;
+	int			caracteres_lidos;
+	char		*line;
+	char		*line_to_return = NULL;
+	static char	*resto;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || read(fd, NULL, 0) < 0 || BUFFER_SIZE < 1)
+	{
+		free(resto);
+		resto = NULL;
 		return (NULL);
-	line_to_return = read_fd(fd, &line);
-	if (!line_to_return)
-		ft_lstclear(&line);
+	}
+	else if (has_new_line(resto))
+	{
+		ft_strjoin_until_new_line(&line_to_return, resto);
+		line = get_resto(resto);
+		free(resto);
+		resto = line;
+	}
+	else
+	{
+		line_to_return = ft_strdup(resto);
+		free(resto);
+		resto = NULL;
+
+		line = malloc(BUFFER_SIZE + 1);
+
+		while (1)
+		{
+			caracteres_lidos = read(fd, line, BUFFER_SIZE);
+			line[caracteres_lidos] = '\0';
+
+			if (caracteres_lidos > 0)
+				ft_strjoin_until_new_line(&line_to_return, line);
+
+			if (caracteres_lidos < BUFFER_SIZE || has_new_line(line))
+				break;
+		}
+
+		if (caracteres_lidos >= 0)
+			resto = get_resto(line);
+		else if (line_to_return)
+		{
+			free(line_to_return);
+			line_to_return = NULL;
+		}
+
+		free(line);
+	}
+
 	return (line_to_return);
 }
